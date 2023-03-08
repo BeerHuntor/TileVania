@@ -8,7 +8,7 @@ public class GameInputManager : MonoBehaviour {
     private PlayerInputActions playerInputActions;
     
     public EventHandler OnJumpAction;
-    public EventHandler OnClimbAction; 
+    public EventHandler OnClimbAction;
 
     private void Awake() {
         playerInputActions = new PlayerInputActions(); 
@@ -17,7 +17,7 @@ public class GameInputManager : MonoBehaviour {
         playerInputActions.Player.Jump.performed += JumpAction_Performed;
         playerInputActions.Player.Climb.performed += ClimbAction_Performed;
     }
-
+    
     private void JumpAction_Performed(InputAction.CallbackContext obj) {
         if (OnJumpAction != null) {
             OnJumpAction.Invoke(this, EventArgs.Empty);
