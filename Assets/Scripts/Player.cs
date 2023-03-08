@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class Player : MonoBehaviour {
 
-    
+    [SerializeField] private Transform spawnPoint;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private GameInputManager gameInputManager;
 
@@ -18,10 +15,15 @@ public class Player : MonoBehaviour {
     private void Start() {
         gameInputManager.OnClimbAction += GameInput_OnClimbAction;
         gameInputManager.OnJumpAction += GameInput_OnJumpAction;
+        gameInputManager.OnRespawnAction += GameInput_OnRespawnAction;
 
         rigidbody2D = GetComponent<Rigidbody2D>();
     }
-    
+
+    private void GameInput_OnRespawnAction(object sender, EventArgs e) {
+        transform.position = spawnPoint.transform.position;
+    }
+
     private void Update() {
         HandleMovement();
 
@@ -41,7 +43,8 @@ public class Player : MonoBehaviour {
         RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - playerHeightOffset), Vector2.down, onGroundDistance);
         if (hitInfo) {
             if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
-                rigidbody2D.AddForce(new Vector2(rigidbody2D.velocity.x, jumpForce), ForceMode2D.Impulse);
+                //rigidbody2D.AddForce(new Vector2(rigidbody2D.velocity.x, jumpForce), ForceMode2D.Impulse);
+                rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpForce);
                 isJumping = true; //TODO: Figure out the wording for seeing if the player is jumping or not. 
             }
         } else {

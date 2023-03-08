@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +7,7 @@ public class GameInputManager : MonoBehaviour {
     
     public EventHandler OnJumpAction;
     public EventHandler OnClimbAction;
+    public EventHandler OnRespawnAction;
 
     private void Awake() {
         playerInputActions = new PlayerInputActions(); 
@@ -16,8 +15,13 @@ public class GameInputManager : MonoBehaviour {
 
         playerInputActions.Player.Jump.performed += JumpAction_Performed;
         playerInputActions.Player.Climb.performed += ClimbAction_Performed;
+        playerInputActions.Player.Respawn.performed += RespawnAction_Performed;
     }
-    
+
+    private void RespawnAction_Performed(InputAction.CallbackContext obj) {
+        if (OnRespawnAction != null ) { OnRespawnAction.Invoke(this, EventArgs.Empty);}
+        
+    }
     private void JumpAction_Performed(InputAction.CallbackContext obj) {
         if (OnJumpAction != null) {
             OnJumpAction.Invoke(this, EventArgs.Empty);
