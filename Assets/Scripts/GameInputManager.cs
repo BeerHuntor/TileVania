@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 public class GameInputManager : MonoBehaviour {
     private PlayerInputActions playerInputActions;
-    
+
     public EventHandler OnJumpAction;
-    public EventHandler OnClimbAction;
+    public EventHandler OnInteractAction;
     public EventHandler OnRespawnAction;
 
     private void Awake() {
@@ -14,7 +14,7 @@ public class GameInputManager : MonoBehaviour {
         playerInputActions.Player.Enable();
 
         playerInputActions.Player.Jump.performed += JumpAction_Performed;
-        playerInputActions.Player.Climb.performed += ClimbAction_Performed;
+        playerInputActions.Player.Interact.performed += InteractAction_Performed;
         playerInputActions.Player.Respawn.performed += RespawnAction_Performed;
     }
 
@@ -28,16 +28,23 @@ public class GameInputManager : MonoBehaviour {
         }
     }
 
-    private void ClimbAction_Performed(InputAction.CallbackContext obj) {
-        if (OnClimbAction != null) {
-            OnClimbAction.Invoke(this, EventArgs.Empty);
+    private void InteractAction_Performed(InputAction.CallbackContext obj) {
+        if (OnInteractAction != null) {
+            OnInteractAction.Invoke(this, EventArgs.Empty);
         }
     }
 
-    public Vector2 GetMovementVectorNormalized() {
+    public Vector2 GetHorizontalMovementVectorNormalized() {
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
         
         inputVector = inputVector.normalized;
         return inputVector;
+    }
+
+    public Vector2 GetClimbingMovementVectorNormalized() {
+        Vector2 inputVector = playerInputActions.Player.Climb.ReadValue<Vector2>();
+
+        inputVector = inputVector.normalized;
+        return inputVector; 
     }
 }

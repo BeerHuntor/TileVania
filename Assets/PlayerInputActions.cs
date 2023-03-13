@@ -46,7 +46,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Climb"",
+                    ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""fb07ad19-b8d9-44d2-9d22-b82ef373e095"",
                     ""expectedControlType"": ""Button"",
@@ -62,12 +62,21 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Climb"",
+                    ""type"": ""Value"",
+                    ""id"": ""4d552f80-cc9e-406f-8802-0f1fcf055daf"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""LeftRight_Keyboard"",
-                    ""id"": ""e0569568-e550-49cd-b7cd-7a39428d0305"",
+                    ""name"": ""2D Vector_KEYBOARD"",
+                    ""id"": ""d4e630e0-8be5-4d67-aec4-1d870c09b42e"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -78,7 +87,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""720daad5-acd5-4e97-b73a-325e180181f2"",
+                    ""id"": ""11a5ce4c-7abf-4516-b047-650a3b2774f3"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -89,7 +98,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""29a02ee2-603c-4da4-bfbb-20db0274fdc9"",
+                    ""id"": ""fc71a19a-51b5-4ec8-a82d-f12c8478749a"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -116,7 +125,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Climb"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -130,6 +139,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Respawn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Up_Down_Climb_Keyboard"",
+                    ""id"": ""16b57e73-45c1-4565-9507-209df87138ec"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e65aa82b-9f6f-4b3a-9a30-99f8add50587"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""400a8569-0baf-4695-88b1-3641cf0cbb16"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -140,8 +182,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Respawn = m_Player.FindAction("Respawn", throwIfNotFound: true);
+        m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -203,16 +246,18 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_Climb;
+    private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Respawn;
+    private readonly InputAction m_Player_Climb;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputAction @Climb => m_Wrapper.m_Player_Climb;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @Respawn => m_Wrapper.m_Player_Respawn;
+        public InputAction @Climb => m_Wrapper.m_Player_Climb;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -228,12 +273,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                @Climb.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
-                @Climb.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
-                @Climb.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Respawn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
                 @Respawn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
                 @Respawn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
+                @Climb.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @Climb.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @Climb.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -244,12 +292,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Climb.started += instance.OnClimb;
-                @Climb.performed += instance.OnClimb;
-                @Climb.canceled += instance.OnClimb;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
                 @Respawn.started += instance.OnRespawn;
                 @Respawn.performed += instance.OnRespawn;
                 @Respawn.canceled += instance.OnRespawn;
+                @Climb.started += instance.OnClimb;
+                @Climb.performed += instance.OnClimb;
+                @Climb.canceled += instance.OnClimb;
             }
         }
     }
@@ -258,7 +309,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnClimb(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
         void OnRespawn(InputAction.CallbackContext context);
+        void OnClimb(InputAction.CallbackContext context);
     }
 }

@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Climb",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "fb07ad19-b8d9-44d2-9d22-b82ef373e095",
                     "expectedControlType": "Button",
@@ -40,12 +40,21 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Climb",
+                    "type": "Value",
+                    "id": "4d552f80-cc9e-406f-8802-0f1fcf055daf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "LeftRight_Keyboard",
-                    "id": "e0569568-e550-49cd-b7cd-7a39428d0305",
+                    "name": "2D Vector_KEYBOARD",
+                    "id": "d4e630e0-8be5-4d67-aec4-1d870c09b42e",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -56,7 +65,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "720daad5-acd5-4e97-b73a-325e180181f2",
+                    "id": "11a5ce4c-7abf-4516-b047-650a3b2774f3",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -67,7 +76,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "29a02ee2-603c-4da4-bfbb-20db0274fdc9",
+                    "id": "fc71a19a-51b5-4ec8-a82d-f12c8478749a",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -94,7 +103,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Climb",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -108,6 +117,39 @@
                     "action": "Respawn",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Up_Down_Climb_Keyboard",
+                    "id": "16b57e73-45c1-4565-9507-209df87138ec",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Climb",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "e65aa82b-9f6f-4b3a-9a30-99f8add50587",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Climb",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "400a8569-0baf-4695-88b1-3641cf0cbb16",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Climb",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

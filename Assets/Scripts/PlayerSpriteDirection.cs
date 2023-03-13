@@ -11,8 +11,8 @@ public class PlayerSpriteDirection : MonoBehaviour {
     }
 
     private void HandleSpriteRotationDirection() {
-        if (gameInputManager.GetMovementVectorNormalized() != Vector2.zero) {
-            lastFacingDirX = gameInputManager.GetMovementVectorNormalized().x;
+        if (gameInputManager.GetHorizontalMovementVectorNormalized() != Vector2.zero) {
+            lastFacingDirX = gameInputManager.GetHorizontalMovementVectorNormalized().x;
         }
         transform.localScale = new Vector2(Mathf.Sign(lastFacingDirX), 1f);
     }
