@@ -28,12 +28,16 @@ public class Player : MonoBehaviour {
     private const string CLIMBING_LAYER_MASK = "Climbing";
     private LayerMask climbingLayerMask;
 
+    private const string PLATFORMS_LAYER_MASK = "Platforms";
+    private LayerMask platformsLayerMask;
+
     private void Start() {
         gameInputManager.OnInteractAction += GameInput_OnInteractAction;
         gameInputManager.OnJumpAction += GameInput_OnJumpAction;
         gameInputManager.OnRespawnAction += GameInput_OnRespawnAction;
 
         climbingLayerMask = LayerMask.GetMask(CLIMBING_LAYER_MASK);
+        platformsLayerMask = LayerMask.GetMask(PLATFORMS_LAYER_MASK);
 
         rb2D = GetComponent<Rigidbody2D>();
         defaultGravityScale = rb2D.gravityScale;
@@ -59,9 +63,8 @@ public class Player : MonoBehaviour {
 
         //RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
 
-        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(raycastDownStartPosition.transform.position.x, raycastDownStartPosition.transform.position.y) , Vector2.down, onGroundDistance);
+        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(raycastDownStartPosition.transform.position.x, raycastDownStartPosition.transform.position.y) , Vector2.down, onGroundDistance, platformsLayerMask);
         Debug.Log(hitInfo.collider);
-        Debug.DrawRay(raycastDownStartPosition.position, Vector3.down, Color.green);
         if (hitInfo) {
             //We have hit something
             if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
