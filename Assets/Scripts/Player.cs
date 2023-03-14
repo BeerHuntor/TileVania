@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private GameInputManager gameInputManager;
+    [SerializeField] private Transform raycastDownStartPosition; 
 
     private Rigidbody2D rb2D;
 
@@ -21,7 +23,7 @@ public class Player : MonoBehaviour {
     private bool isClimbing;
 
     private float playerWidthXOffset = 0.25f;
-    private float defaultGravityScale = 10f; 
+    private float defaultGravityScale; 
 
     private const string CLIMBING_LAYER_MASK = "Climbing";
     private LayerMask climbingLayerMask;
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour {
         climbingLayerMask = LayerMask.GetMask(CLIMBING_LAYER_MASK);
 
         rb2D = GetComponent<Rigidbody2D>();
+        defaultGravityScale = rb2D.gravityScale;
     }
 
     private void GameInput_OnRespawnAction(object sender, EventArgs e) {
@@ -44,17 +47,21 @@ public class Player : MonoBehaviour {
         HandleMovement();
         HandleClimbing();
 
-    }
+    }   
+    #region EventImplementations
     private void GameInput_OnJumpAction(object sender, EventArgs e) {
 
         //Jump Implementation.
         float jumpForce = 20f;
         float onGroundDistance = 0.3f;
         float playerHeightOffset = 0.49f; // changed from box collider 2d to capsule collider 2d. Had to manually check every value in inspector. IDK why it messed up. 
-        float raycastStartYPosition = transform.position.y - playerHeightOffset;
+        //float raycastStartYPosition = transform.position.y - playerHeightOffset;
 
-        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
+        //RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
 
+        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(raycastDownStartPosition.transform.position.x, raycastDownStartPosition.transform.position.y) , Vector2.down, onGroundDistance);
+        Debug.Log(hitInfo.collider);
+        Debug.DrawRay(raycastDownStartPosition.position, Vector3.down, Color.green);
         if (hitInfo) {
             //We have hit something
             if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
@@ -94,11 +101,9 @@ public class Player : MonoBehaviour {
         }
 
     }
-    
-    private void SetSelfPositionOfLadder(Vector3 position) {
-        transform.position = position;
-    }
-    
+    #endregion
+
+    #region TileMapMethods
     //Gets the Tile in the tilemap at raycast hitpoint. 
     private TileBase GetTileAtRaycastHitPoint(RaycastHit2D raycastHitInfo, Tilemap tilemap) {
         
@@ -129,8 +134,9 @@ public class Player : MonoBehaviour {
         Vector3Int gridPostition = tilemap.WorldToCell(raycastHitInfo.point);
         return gridPostition;
     }
+    #endregion
 
-#region Movement 
+    #region Movement 
     private void HandleMovement() {
         Vector2 inputVector = gameInputManager.GetHorizontalMovementVectorNormalized();
         
@@ -147,7 +153,7 @@ public class Player : MonoBehaviour {
     private void HandleClimbing() {
         if (!rb2D.IsTouchingLayers(climbingLayerMask)) {
             isClimbing = false;
-            SetPlayerGravity(defaultGravityScale);
+            SetPlayerGravityScale(defaultGravityScale);
             return;
         }
 
@@ -158,7 +164,7 @@ public class Player : MonoBehaviour {
 
         isClimbing = climbDir != Vector3.zero;
 
-        SetPlayerGravity(0);
+        SetPlayerGravityScale(0);
         transform.position += climbDir * Time.deltaTime;
     }
 
@@ -171,7 +177,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void SetPlayerGravity(float gravityValue) {
+    private void SetPlayerGravityScale(float gravityValue) {
         rb2D.gravityScale = gravityValue;
     }
 
