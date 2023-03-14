@@ -57,14 +57,10 @@ public class Player : MonoBehaviour {
 
         //Jump Implementation.
         float jumpForce = 20f;
-        float onGroundDistance = 0.3f;
-        float playerHeightOffset = 0.49f; // changed from box collider 2d to capsule collider 2d. Had to manually check every value in inspector. IDK why it messed up. 
-        //float raycastStartYPosition = transform.position.y - playerHeightOffset;
-
-        //RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
-
+        float onGroundDistance = 0.3f; //At which point the raycast checks if the player is onGround.
+       
         RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(raycastDownStartPosition.transform.position.x, raycastDownStartPosition.transform.position.y) , Vector2.down, onGroundDistance, platformsLayerMask);
-        Debug.Log(hitInfo.collider);
+        
         if (hitInfo) {
             //We have hit something
             if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
@@ -73,6 +69,7 @@ public class Player : MonoBehaviour {
         }
         else {
             // Not hit anything.
+            return;
         }
     }
 
@@ -101,6 +98,7 @@ public class Player : MonoBehaviour {
             
         } else {
             //We havent hit anything
+            return;
         }
 
     }
@@ -182,6 +180,10 @@ public class Player : MonoBehaviour {
 
     private void SetPlayerGravityScale(float gravityValue) {
         rb2D.gravityScale = gravityValue;
+    }
+
+    public void PlayerDeath() {
+        Debug.Log("PlayerDeath()");
     }
 
     public bool IsRunning() {

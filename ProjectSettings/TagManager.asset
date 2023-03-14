@@ -47,6 +47,9 @@ TagManager:
   - name: Water
     uniqueID: 3728360253
     locked: 0
+  - name: Obstacles
+    uniqueID: 2803656847
+    locked: 0
   - name: Platforms
     uniqueID: 1512296341
     locked: 0
