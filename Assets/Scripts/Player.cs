@@ -14,7 +14,6 @@ public class Player : MonoBehaviour {
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private GameInputManager gameInputManager;
 
-    public float runSpeed; 
     private Rigidbody2D rb2D;
 
     private bool isRunning;
@@ -22,6 +21,7 @@ public class Player : MonoBehaviour {
     private bool isClimbing;
 
     private float playerWidthXOffset = 0.25f;
+    private float defaultGravityScale = 10f; 
 
     private const string CLIMBING_LAYER_MASK = "Climbing";
     private LayerMask climbingLayerMask;
@@ -45,6 +45,26 @@ public class Player : MonoBehaviour {
         HandleClimbing();
 
     }
+    private void GameInput_OnJumpAction(object sender, EventArgs e) {
+
+        //Jump Implementation.
+        float jumpForce = 20f;
+        float onGroundDistance = 0.3f;
+        float playerHeightOffset = 0.49f; // changed from box collider 2d to capsule collider 2d. Had to manually check every value in inspector. IDK why it messed up. 
+        float raycastStartYPosition = transform.position.y - playerHeightOffset;
+
+        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
+
+        if (hitInfo) {
+            //We have hit something
+            if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
+                Jump(jumpForce);
+            }
+        }
+        else {
+            // Not hit anything.
+        }
+    }
 
     private void GameInput_OnInteractAction(object sender, EventArgs e) {
         //Interact Movement implementation
@@ -58,7 +78,6 @@ public class Player : MonoBehaviour {
             Tilemap tilemap = hitInfo.transform.GetComponent<Tilemap>();
             
             if (hitInfo.transform.TryGetComponent(out Interactable interactable)) {
-                Debug.Log(hitInfo.transform);
                 //We have hit an interactable object. 
                 TileBase tile = GetTileAtRaycastHitPoint(hitInfo, tilemap);
                 
@@ -111,25 +130,6 @@ public class Player : MonoBehaviour {
         return gridPostition;
     }
 
-
-    private void GameInput_OnJumpAction(object sender, EventArgs e) {
-        //Jump Implementation.
-        float jumpForce = 10f;
-        float onGroundDistance = 0.1f;
-        float playerHeightOffset = 0.49f; // changed from box collider 2d to capsule collider 2d. Had to manually check every value in inspector. IDK why it messed up. 
-        float raycastStartYPosition = transform.position.y - playerHeightOffset;
-
-        RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, raycastStartYPosition), Vector2.down, onGroundDistance);
-        
-        if (hitInfo) {
-            //We have hit something
-            if (hitInfo.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
-                Jump(jumpForce);
-            }
-        } else {
-            // Not hit anything.
-        }
-    }
 #region Movement 
     private void HandleMovement() {
         Vector2 inputVector = gameInputManager.GetHorizontalMovementVectorNormalized();
@@ -147,24 +147,32 @@ public class Player : MonoBehaviour {
     private void HandleClimbing() {
         if (!rb2D.IsTouchingLayers(climbingLayerMask)) {
             isClimbing = false;
+            SetPlayerGravity(defaultGravityScale);
             return;
         }
 
         Vector2 inputVector = gameInputManager.GetClimbingMovementVectorNormalized();
-        float climbSpeed = 0.1f;
+        float climbSpeed = 10f;
 
         Vector3 climbDir = new Vector3(inputVector.x, inputVector.y * climbSpeed, 0f);
 
         isClimbing = climbDir != Vector3.zero;
-        
+
+        SetPlayerGravity(0);
         transform.position += climbDir * Time.deltaTime;
-        Debug.Log(transform.position += climbDir);
     }
-#endregion
+
+    #endregion
+
+
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.transform.TryGetComponent(out StaticPlatform staticPlatform)) {
             isOnGround = true;
         }
+    }
+
+    private void SetPlayerGravity(float gravityValue) {
+        rb2D.gravityScale = gravityValue;
     }
 
     public bool IsRunning() {
