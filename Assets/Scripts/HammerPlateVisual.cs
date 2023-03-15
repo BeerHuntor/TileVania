@@ -45,7 +45,7 @@ public class HammerPlateVisual : MonoBehaviour {
                 OnLowestPoint.Invoke(this, EventArgs.Empty);
             }
 
-            StartCoroutine(WaitForSmokeAnimationComplete());
+            StartCoroutine(DelayToWaitBeforeTravellingUp(0.375f));
 
             //Play the animation - wait for animation to finish, then call TravelUp(); 
         } else {
@@ -71,8 +71,8 @@ public class HammerPlateVisual : MonoBehaviour {
         return oneDecimalPlace; 
     }
 
-    private IEnumerator WaitForSmokeAnimationComplete() {
-        yield return new WaitForSeconds(0.35f);
+    private IEnumerator DelayToWaitBeforeTravellingUp(float delay) {
+        yield return new WaitForSeconds(delay);
         isTravellingUp = true;
     }
 
