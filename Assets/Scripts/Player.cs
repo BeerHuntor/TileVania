@@ -11,6 +11,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviour {
 
+    public event EventHandler OnPlayerDamage;
+    
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private GameInputManager gameInputManager;
@@ -182,6 +184,11 @@ public class Player : MonoBehaviour {
         rb2D.gravityScale = gravityValue;
     }
 
+    public void PlayerDamage(int damageAmount) {
+        if (OnPlayerDamage != null) {
+            OnPlayerDamage.Invoke(this, EventArgs.Empty);
+        }
+    }
     public void PlayerDeath() {
         Debug.Log("PlayerDeath()");
     }
