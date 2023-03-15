@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4418700752748555279}
   - component: {fileID: 4418700752748555273}
   - component: {fileID: 4418700752748555278}
+  - component: {fileID: 4212302554764810295}
   m_Layer: 0
   m_Name: HammerPlateVisual
   m_TagString: Untagged
@@ -105,6 +106,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4212302554764810295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4418700752748555276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ecb0235a27d0084f9a81ea875c931e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hammerPlateVisual: {fileID: 5056183043486619390}
 --- !u!1 &4418700753245649465
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +213,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.4736072}
+  m_Offset: {x: 0, y: -0.8145132}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -210,7 +224,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.38236338}
+  m_Size: {x: 1, y: 0.34846568}
   m_EdgeRadius: 0
 --- !u!114 &5056183043486619390
 MonoBehaviour:
@@ -224,4 +238,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d248fd2929ea8424c834b92b049c8f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hammerPlateVisual: {fileID: 4418700752748555279}
+  moveSpeed: 10

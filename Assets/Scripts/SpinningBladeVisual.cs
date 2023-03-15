@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpinningBladeVisuals : MonoBehaviour {
+public class SpinningBladeVisual : MonoBehaviour {
 
     [SerializeField] private Transform bladeTop;
     [SerializeField] private Transform SawBlade;
